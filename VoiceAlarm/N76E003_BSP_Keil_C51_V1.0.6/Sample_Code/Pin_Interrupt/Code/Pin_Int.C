@@ -21,25 +21,55 @@
 #include "Common.h"
 #include "Delay.h"
 
-static int GreenFlag = 1;
+#define GLED 	P10
+#define RLED 	P15
+#define P_SDA 	P00
+#define P_SCL 	P01
+
+
+static int GreenFlag = 0;
 int* const GreenP = &GreenFlag;
 
 /******************************************************************************
  * FUNCTION_PURPOSE: I/O Pin interrupt Service Routine
  ******************************************************************************/
+void SendCMD(int cmd)
+{
+	int i = 0;
+	int cmdData = cmd;
+	int eachBit;
+	//begin transportation 
+	P_SCL = 0;
+	Timer0_Delay1ms(5); // delay 5ms
+	for(i=0; i<8;i++)   // send one byte
+	{
+		eachBit = cmdData & 0x01;
+		P_SCL = 0;
+		P_SDA = eachBit;
+		Timer0_Delay100us(2);
+		P_SCL = 1;
+		Timer0_Delay100us(2);
+		cmdData >>= 1;
+	}
+	P_SCL = 1;
+	P_SDA = 1;
+}
 
 void PinInterrupt_ISR (void) interrupt 7 // Pin interrupt server. level 7
 {
 	if(PIF == 0x80)
 	{
-			PIF = 0x00;        	        // clear interrupt flag
-			P15 = 1;
-			P15 = 0;					// Set RED LED
-			* GreenP = 1;				// set green flag
+		PIF = 0x00;        	        // clear interrupt flag
+		RLED = 1;
+		SendCMD(0x0);
+		SendCMD(0x0);
+		Timer0_Delay1ms(300);
+		RLED = 0;					// Set RED LED
+		*GreenP = 1;				// set green flag
   
-		
 	}
 }
+
 
 /******************************************************************************
 The main C function.  Program execution starts
@@ -47,12 +77,17 @@ here after stack initialization.
 ******************************************************************************/
 void main (void) 
 {
-
+	//Green LED output
 	P10_PushPull_Mode;
-	P10 = 0;
+	GLED = 0;
+	//RED LED output
 	P15_PushPull_Mode;
-	P15 = 0;
-
+	RLED = 0;
+	//clk-data bus 
+	P00_PushPull_Mode; // data 
+	P01_PushPull_Mode; // clk
+	P_SDA = 1;
+	P_SCL = 1;
 	 
     P17_Input_Mode; // Set p1.7 input mode
 	set_P1S_7;			// set p1.7 voltage level mode
@@ -67,9 +102,9 @@ void main (void)
 			set_PD;
 			while(* GreenP)
 			{
-				P10 = 1;
+				GLED = 1;
 				Timer0_Delay1ms(3000);
-				P10 = 0;
+				GLED = 0;
 			}
 		}
 
