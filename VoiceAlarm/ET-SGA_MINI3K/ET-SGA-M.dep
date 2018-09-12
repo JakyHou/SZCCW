@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>2934869549</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\MAIN.C</file>
+      <file>$PROJ_DIR$\Debug\Exe\ET-SGA-M.d43</file>
+      <file>$TOOLKIT_DIR$\inc\msp430x20x1.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\ET-SGA-M.txt</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\MAIN.r43</file>
+      <file>$TOOLKIT_DIR$\config\lnk430F2011.xcl</file>
+      <file>$TOOLKIT_DIR$\inc\in430.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</file>
+      <file>$PROJ_DIR$\Debug\Exe\ET-SGA-M.ulp</file>
+      <file>$PROJ_DIR$\Debug\Obj\MAIN.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ET-SGA-M.pbd</file>
+      <file>$PROJ_DIR$\Debug\Exe\ET-SGA-M3K.txt</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\MAIN.C</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10</file>
+        </tool>
+        <tool>
+          <name>ICC430</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICC430</name>
+          <file> 2 7 4</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\ET-SGA-M.d43</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 6 5 8</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\ET-SGA-M.txt</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 6 5 8</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\ET-SGA-M3K.txt</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 6 5 8</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 12</file>
+        </tool>
+        <tool>
+          <name>ULP430</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs>
+      <file>$PROJ_DIR$\MAIN.C</file>
+      <file>$TOOLKIT_DIR$\inc\msp430x20x1.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Release\Obj\MAIN.r43</file>
+      <file>$TOOLKIT_DIR$\inc\in430.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</file>
+      <file>$PROJ_DIR$\Release\Obj\MAIN.pbi</file>
+      <file>$TOOLKIT_DIR$\config\lnk430.xcl</file>
+      <file>$TOOLKIT_DIR$\config\multiplier.xcl</file>
+      <file>$PROJ_DIR$\Release\Exe\ET-SGA-M.txt</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\MAIN.C</name>
+      <outputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 6</file>
+        </tool>
+        <tool>
+          <name>ICC430</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1 4 2</file>
+        </tool>
+        <tool>
+          <name>ICC430</name>
+          <file> 1 4 2</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Release\Exe\ET-SGA-M.txt</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 7 8 3 5</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+    </file>
+  </configuration>
+</project>
+
+
