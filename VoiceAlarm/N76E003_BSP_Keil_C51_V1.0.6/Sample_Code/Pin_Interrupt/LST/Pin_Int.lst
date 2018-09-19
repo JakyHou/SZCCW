@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   PIN_INT                                                           09/17/2018 11:47:50 PAGE 1   
+C51 COMPILER V9.59.0.0   PIN_INT                                                           09/18/2018 17:59:15 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE PIN_INT
@@ -45,115 +45,170 @@ line level    source
   26          #define P_SDA   P00
   27          #define P_SCL   P01
   28          
-  29          static int GFlag = 0;
-  30          
+  29          int GFlag = 0;
+  30          int RFlag = 0;
   31          
-  32          /******************************************************************************
-  33           * FUNCTION_PURPOSE: I/O Pin interrupt Service Routine
-  34           ******************************************************************************/
-  35          
-  36          // voice alarm cmd
-  37          void SendCMD(int cmd)
-  38          {
-  39   1        int i = 0;
-  40   1        int cmdData = cmd;
-  41   1        int eachBit;
-  42   1        //begin transportation 
-  43   1        P_SCL = 0;
-  44   1        Timer0_Delay1ms(5); // delay 5ms
-  45   1        for(i=0; i<8;i++)   // send one word
-C51 COMPILER V9.59.0.0   PIN_INT                                                           09/17/2018 11:47:50 PAGE 2   
+  32          
+  33          /******************************************************************************
+  34           * FUNCTION_PURPOSE: I/O Pin interrupt Service Routine
+  35           ******************************************************************************/
+  36          
+  37          // voice alarm cmd
+  38          void SendCMD(int cmd)
+  39          {
+  40   1        int i = 0;
+  41   1        int cmdData = cmd;
+  42   1        int eachBit;
+  43   1        //begin transportation 
+  44   1        P_SCL = 0;
+  45   1        Timer0_Delay1ms(5); // delay 5ms
+C51 COMPILER V9.59.0.0   PIN_INT                                                           09/18/2018 17:59:15 PAGE 2   
 
-  46   1        {
-  47   2          eachBit = cmdData & 0x01;
-  48   2          P_SCL = 0;
-  49   2          P_SDA = eachBit;
-  50   2          Timer0_Delay100us(2);
-  51   2          P_SCL = 1;
-  52   2          Timer0_Delay100us(2);
-  53   2          cmdData >>= 1;
-  54   2        }
-  55   1        P_SCL = 1;
-  56   1        P_SDA = 1;
-  57   1      }
-  58          
-  59          void PinInterrupt_ISR (void) interrupt 7 // Pin interrupt server. level 7
-  60          {
-  61   1      
-  62   1        if(PIF == 0x80)
-  63   1        {
-  64   2          PIF = 0x00;                 // clear interrupt flag
-  65   2          // SendCMD(0xFE);       // stop voice alarm
-  66   2          GLED = 0;         // turn off green led
-  67   2          RLED = 1;
-  68   2          while(1)          // wait for steady
-  69   2          {
-  70   3            if(P17 == 1) break;
-  71   3          }
-  72   2          RLED = 0;         // turn off red led jump back
-  73   2          SendCMD(0x0);         // Play voice alarm 0
-  74   2          SendCMD(0xF2);          // Play voice alarm 0
-  75   2          GFlag = 30;
-  76   2        }
-  77   1      }
-  78          
+  46   1        for(i=0; i<8;i++)   // send one word
+  47   1        {
+  48   2          eachBit = cmdData & 0x01;
+  49   2          P_SCL = 0;
+  50   2          P_SDA = eachBit;
+  51   2          Timer0_Delay100us(4);
+  52   2          P_SCL = 1;
+  53   2          Timer0_Delay100us(4);
+  54   2          cmdData >>= 1;
+  55   2        }
+  56   1        P_SCL = 1;
+  57   1        P_SDA = 1;
+  58   1      }
+  59          
+  60          void PinInit()
+  61          {
+  62   1        //Green LED output
+  63   1        P10_PushPull_Mode;
+  64   1        GLED = 0;
+  65   1        //RED LED output
+  66   1        P15_PushPull_Mode;
+  67   1        RLED = 0;
+  68   1        //clk-data bus 
+  69   1        P00_PushPull_Mode; // data 
+  70   1        P01_PushPull_Mode; // clk
+  71   1        P_SDA = 1;
+  72   1        P_SCL = 1;
+  73   1         
+  74   1          P17_Input_Mode; // Set p1.7 input mode
+  75   1        set_P1S_7;      // set p1.7 voltage level mode
+  76   1        Enable_INT_Port1;     // Set interrupt IO port 
+  77   1        Enable_BIT7_RasingEdge_Trig; // Set pin7 Triger mode
+  78   1      }
   79          
-  80          /******************************************************************************
-  81          The main C function.  Program execution starts
-  82          here after stack initialization.
-  83          ******************************************************************************/
-  84          void main (void) 
-  85          {
-  86   1      
-  87   1        //Green LED output
-  88   1        P10_PushPull_Mode;
-  89   1        GLED = 0;
-  90   1        //RED LED output
-  91   1        P15_PushPull_Mode;
-  92   1        RLED = 0;
-  93   1        //clk-data bus 
-  94   1        P00_PushPull_Mode; // data 
-  95   1        P01_PushPull_Mode; // clk
-  96   1        P_SDA = 1;
-  97   1        P_SCL = 1;
-  98   1         
-  99   1          P17_Input_Mode; // Set p1.7 input mode
- 100   1        set_P1S_7;      // set p1.7 voltage level mode
- 101   1        Enable_INT_Port1;     // Set interrupt IO port 
- 102   1        Enable_BIT7_FallEdge_Trig; // Set pin7 Triger mode
- 103   1      
- 104   1          set_EPI;              // Enable pin interrupt
- 105   1          set_EA;               // global interrupt enable bit
- 106   1      
- 107   1          while (1)
-C51 COMPILER V9.59.0.0   PIN_INT                                                           09/17/2018 11:47:50 PAGE 3   
+  80          void PinInterrupt_ISR (void) interrupt 7 // Pin interrupt server. level 7
+  81          {
+  82   1        
+  83   1        PIF = 0x00;                 // clear interrupt flag
+  84   1      
+  85   1      }
+  86          
+  87          
+  88          /******************************************************************************
+  89          The main C function.  Program execution starts
+  90          here after stack initialization.
+  91          ******************************************************************************/
+  92          void main (void) 
+  93          {
+  94   1      
+  95   1        PinInit();
+  96   1      
+  97   1        Timer0_Delay1ms(200);
+  98   1          set_EPI;              // Enable pin interrupt 
+  99   1          set_EA;               // global interrupt enable bit
+ 100   1        // PIF = 0x00;
+ 101   1        clr_BODEN;              // disable brown out detection
+ 102   1          
+ 103   1        // PIF = 0x80;
+ 104   1      
+ 105   1          while (1)
+ 106   1        {
+ 107   2      
+C51 COMPILER V9.59.0.0   PIN_INT                                                           09/18/2018 17:59:15 PAGE 3   
 
- 108   1        {
+ 108   2      
  109   2          
- 110   2          if(GFlag > 0)
- 111   2          {
- 112   3              GLED = 1;
- 113   3              Timer1_Delay10ms(50);
- 114   3              GLED = 0;
- 115   3              Timer1_Delay10ms(50);
- 116   3              GFlag--;
- 117   3          
- 118   3          }
- 119   2          else set_PD;  // PowerDown mode
- 120   2          
- 121   2        }
- 122   1        
- 123   1        
- 124   1        
- 125   1      }
+ 110   2      
+ 111   2          if(P17 != 0)
+ 112   2          {
+ 113   3            //    int count = 3;
+ 114   3            Timer0_Delay1ms(5);
+ 115   3            if(P17 != 0)
+ 116   3            {
+ 117   4              // SendCMD(0xFE);       // stop voice alarm
+ 118   4              // Timer0_Delay1ms(10);
+ 119   4              //SendCMD(0x4);       
+ 120   4              // Timer0_Delay1ms(10);
+ 121   4              // SendCMD(0xF2);
+ 122   4              GLED = 0;         // turn off green led
+ 123   4              RLED = 0;
+ 124   4              // GFlag = 0;
+ 125   4              RFlag = 30;
+ 126   4              SendCMD(0x4); 
+ 127   4              Timer0_Delay1ms(10);
+ 128   4              SendCMD(0xF2);
+ 129   4              while(RFlag > 0)
+ 130   4              {
+ 131   5                if(P17 != 0)
+ 132   5                {
+ 133   6                  RLED = 1;
+ 134   6                  Timer0_Delay1ms(500);
+ 135   6                  RLED = 0;
+ 136   6                  Timer0_Delay1ms(500);
+ 137   6                  RFlag--;
+ 138   6                }
+ 139   5                else
+ 140   5                {
+ 141   6                  SendCMD(0xFE);
+ 142   6                  GFlag = 6;
+ 143   6                  while(GFlag)
+ 144   6                  {
+ 145   7                    GLED = 1;
+ 146   7                    Timer0_Delay1ms(200);
+ 147   7                    GLED = 0;
+ 148   7                    Timer0_Delay1ms(300);
+ 149   7                    GFlag--;
+ 150   7                  }
+ 151   6                  RFlag = 0;
+ 152   6                }
+ 153   5              }
+ 154   4            }
+ 155   3                
+ 156   3          }
+ 157   2          else
+ 158   2            {
+ 159   3              Timer0_Delay1ms(5);
+ 160   3              if(P17 == 0)
+ 161   3              {
+ 162   4                GFlag = 6;
+ 163   4                while(GFlag)
+ 164   4                {
+ 165   5                  GLED = 1;
+ 166   5                  Timer0_Delay1ms(200);
+ 167   5                  GLED = 0;
+ 168   5                  Timer0_Delay1ms(300);
+ 169   5                  GFlag--;
+C51 COMPILER V9.59.0.0   PIN_INT                                                           09/18/2018 17:59:15 PAGE 4   
+
+ 170   5                }
+ 171   4              }
+ 172   3            } 
+ 173   2              set_PD;
+ 174   2          }
+ 175   1        
+ 176   1      
+ 177   1        
+ 178   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    332    ----
+   CODE SIZE        =    462    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      2       6
+   DATA SIZE        =      4       6
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

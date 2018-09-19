@@ -26,7 +26,8 @@
 #define P_SDA 	P00
 #define P_SCL 	P01
 
-static int GFlag = 0;
+int GFlag = 0;
+int RFlag = 0;
 
 
 /******************************************************************************
@@ -47,43 +48,17 @@ void SendCMD(int cmd)
 		eachBit = cmdData & 0x01;
 		P_SCL = 0;
 		P_SDA = eachBit;
-		Timer0_Delay100us(2);
+		Timer0_Delay100us(4);
 		P_SCL = 1;
-		Timer0_Delay100us(2);
+		Timer0_Delay100us(4);
 		cmdData >>= 1;
 	}
 	P_SCL = 1;
 	P_SDA = 1;
 }
 
-void PinInterrupt_ISR (void) interrupt 7 // Pin interrupt server. level 7
+void PinInit()
 {
-
-	if(PIF == 0x80)
-	{
-		PIF = 0x00;        	        // clear interrupt flag
-		// SendCMD(0xFE);				// stop voice alarm
-		GLED = 0;					// turn off green led
-		RLED = 1;
-		while(1)					// wait for steady
-		{
-			if(P17 == 1) break;
-		}
-		RLED = 0;					// turn off red led jump back
-		SendCMD(0x0);					// Play voice alarm 0
-		SendCMD(0xF2);					// Play voice alarm 0
-		GFlag = 30;
-	}
-}
-
-
-/******************************************************************************
-The main C function.  Program execution starts
-here after stack initialization.
-******************************************************************************/
-void main (void) 
-{
-
 	//Green LED output
 	P10_PushPull_Mode;
 	GLED = 0;
@@ -96,30 +71,108 @@ void main (void)
 	P_SDA = 1;
 	P_SCL = 1;
 	 
-    P17_Input_Mode; // Set p1.7 input mode
+  	P17_Input_Mode; // Set p1.7 input mode
 	set_P1S_7;			// set p1.7 voltage level mode
 	Enable_INT_Port1; 		// Set interrupt IO port 
-	Enable_BIT7_FallEdge_Trig; // Set pin7 Triger mode
+	Enable_BIT7_RasingEdge_Trig; // Set pin7 Triger mode
+}
 
-    set_EPI;							// Enable pin interrupt
+void PinInterrupt_ISR (void) interrupt 7 // Pin interrupt server. level 7
+{
+	
+	PIF = 0x00;        	        // clear interrupt flag
+
+}
+
+
+/******************************************************************************
+The main C function.  Program execution starts
+here after stack initialization.
+******************************************************************************/
+void main (void) 
+{
+
+	PinInit();
+
+	Timer0_Delay1ms(200);
+    set_EPI;							// Enable pin interrupt	
     set_EA;								// global interrupt enable bit
+	// PIF = 0x00;
+	clr_BODEN;							// disable brown out detection
+		
+	// PIF = 0x80;
 
     while (1)
 	{
+
+
 		
-		if(GFlag > 0)
+
+		if(P17 != 0)
 		{
-				GLED = 1;
-				Timer1_Delay10ms(50);
-				GLED = 0;
-				Timer1_Delay10ms(50);
-				GFlag--;
-		
+			//		int count = 3;
+			Timer0_Delay1ms(5);
+			if(P17 != 0)
+			{
+				// SendCMD(0xFE);				// stop voice alarm
+				// Timer0_Delay1ms(10);
+				//SendCMD(0x4);				
+				// Timer0_Delay1ms(10);
+				// SendCMD(0xF2);
+				GLED = 0;					// turn off green led
+				RLED = 0;
+				// GFlag = 0;
+				RFlag = 30;
+				SendCMD(0x4);	
+				Timer0_Delay1ms(10);
+				SendCMD(0xF2);
+				while(RFlag > 0)
+				{
+					if(P17 != 0)
+					{
+						RLED = 1;
+						Timer0_Delay1ms(500);
+						RLED = 0;
+						Timer0_Delay1ms(500);
+						RFlag--;
+					}
+					else
+					{
+						SendCMD(0xFE);
+						GFlag = 6;
+						while(GFlag)
+						{
+							GLED = 1;
+							Timer0_Delay1ms(200);
+							GLED = 0;
+							Timer0_Delay1ms(300);
+							GFlag--;
+						}
+						RFlag = 0;
+					}
+				}
+			}
+					
 		}
-		else set_PD;	// PowerDown mode
-		
-	}
+		else
+			{
+				Timer0_Delay1ms(5);
+				if(P17 == 0)
+				{
+					GFlag = 6;
+					while(GFlag)
+					{
+						GLED = 1;
+						Timer0_Delay1ms(200);
+						GLED = 0;
+						Timer0_Delay1ms(300);
+						GFlag--;
+					}
+				}
+			}	
+				set_PD;
+		}
 	
-	
+
 	
 }
