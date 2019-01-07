@@ -766,7 +766,7 @@ void SVPWM_3ShuntCalcDutyCycles (Volt_Components Stat_Volt_Input)
                 ADC1->JSQR = PHASE_A_MSK + BUS_VOLT_FDBK_MSK + SEQUENCE_LENGHT;                
                 //ADC_InjectedChannelConfig(ADC2, PHASE_C_CHANNEL,1,
                 //                                    SAMPLING_TIME_CK);                                        
-				ADC2->JSQR = PHASE_C_MSK + TEMP_FDBK_MSK + SEQUENCE_LENGHT;
+				        ADC2->JSQR = PHASE_C_MSK + TEMP_FDBK_MSK + SEQUENCE_LENGHT;
                 break;
     
     case SECTOR_4:
