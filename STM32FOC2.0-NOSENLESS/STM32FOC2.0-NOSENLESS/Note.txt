@@ -1,0 +1,79 @@
+1	相电压检测使用0.1欧姆电阻，产生的电压放大5倍 + Vref所得
+2	ADC 采集电压的处理函数
+3	换相检测机制
+######################################################################################################
+4	修改MC_Control_Param.h PID_TORQUE_REFERENCE 设置默认转矩（速度调节和力矩调节的默认初始值）
+	启动扭矩相关 MC_State_Observer_param.h FIRST_I_STARTUP FINAL_I_STARTUP 
+5	MC_State_Observer_param.h 转子位置检测参数设定 MC_PMSM_motor_param.h 电机参数设定
+
+6	#define PID_SPEED_REFERENCE_RPM
+	在闭环模式下启动转子时转速定位值以rpm为单位定义；
+
+7	MC_State_Observer_param.h 
+	#define MAX_CURRENT
+	定义等于 ADC 转化的电流值位 32767（最大 16 位），单位安培。如果电流是
+	通过分流电阻测得，则：MAX_CURRENT=3.3/(2*Rshunt*Av)（Av为运算放大器的增益）
+
+8	#define FREQ_START_UP_DURATION
+	定义启动允许的总时间，单位毫秒。
+	#define FINAL_START_UP_SPEED
+	定义旋转磁通的速度，启动的时间的最后的速度，单位转数/分（这个参数设定的是频率线性斜坡的斜率）。
+
+9	#define FIRST_I_STARTUP
+	数字量，按照以下计算公式定义三相电流系统的初始幅值：
+	
+	I(digit)= I(Amps)*Rshunt*Av*65536/3.3
+
+10	#define FINAL_I_STARTUP
+	数字量，按照上述计算公式定义三相电流系统的最终幅值。这幅值的选择应
+	该使产生的磁场力矩与实际应用负载相匹配。
+11	#define I_STARTUP_DURATION
+	定义从幅值的初始到最后，线性电流幅值增长允许时间，单位毫秒。
+/*
+	#define FIRST_I_STARTUP           (u16) 2881 //0.6Amps 设置启动电流
+	#define FINAL_I_STARTUP           (u16) 5361 //1Amp 设置启动完成电流
+	#define I_START_UP_DURATION       (u16) 3000 //in msec 电流线性增长时间
+*/
+12	#define MINIMUM_SPEED_RPM
+	定义启动程序终止时的正常运行最小速度以（当转子速度/位置是可靠的），
+	单位转数/分。 //设到100rpm
+
+	根据用户的实际应用要求，在每个电机启动前对转子校准或预定位。通过适
+	当配置 stm32f10x_MCconf.h，这些额外的功能是可作为代选项（参考章节 4.1）。
+	这样，下面的参数的选择以实现预期的功能：
+	#define SLESS_T_ALIGNMENT
+	定义校准相位需要的持续时间，单位毫秒。
+	#define SLESS_ALIGNMENT_ANGLE
+	指定矢量的方向（如图 34 角度 θ）
+	#define SLESS_I_ALIGNMENT
+	数字量，定义参考 Id 的最终值大小。通过将 SLESS_ALIGNMENT_ANGLE 设置
+	成 90°（默认）以及 STM3210B-MCKIT，A 相位的最终电流值通过公式计算：
+	对齐 A 相最后电流= (SLESS_I_ALIGNMENT × 1.65/Av)/(32767 × Rshunt)
+
+13	#define VARIANCE_THRESHOLD
+	参 数 设 定 速 度 测 量 方 差 的 门 槛 。VARIANCE_THRESHOLD 的参数越小，故障检测算法就越严格
+
+14	MC_PMSM_motor_param.h
+	#define NOMINAL_CURRENT
+	数字量，根据下式公式定义电机额定电流（0-最大值）：
+	I(digit)= I(Amps)*Rshunt*Av*65536/3.3
+
+15	#define MOTOR_MAX_SPEED_RPM
+	定义根据实际应用电机的最大速度（转数/分）
+
+16	#define ID_DEMAG
+	以数字量（负 16 位值）定义电机磁体未被磁化时最大参考电流 id*。参数最
+	大等于–NOMINAL_CURRENT（默认）
+
+17	https://blog.csdn.net/u010671230/article/details/79478582?tdsourcetag=s_pcqq_aiomsg
+	交轴Q 直轴D  定子磁场与转子磁场方向相交或者垂直的方向 以转子为中心
+
+
+############################################################################################
+
+18 	注意测试6通道PWM输出
+
+19 	在MC_State_Observer_Interface.c中357行 MCL_SetFault（）；
+
+20  	在MC_STATE_OBSERVER_INTERFACE.c 中判断 Start_Up_State  是不是fault
+

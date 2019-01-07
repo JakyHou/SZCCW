@@ -640,8 +640,8 @@ void SVPWM_3ShuntCalcDutyCycles (Volt_Components Stat_Volt_Input)
   {  
     case SECTOR_1:
                 hTimePhA = (T/8) + ((((T + wX) - wZ)/2)/131072);
-				hTimePhB = hTimePhA + wZ/131072;
-				hTimePhC = hTimePhB - wX/131072;
+                hTimePhB = hTimePhA + wZ/131072;
+                hTimePhC = hTimePhB - wX/131072;
                 
                 // ADC Syncronization setting value             
                 if ((u16)(PWM_PERIOD-hTimePhA) > TW_AFTER)
@@ -652,7 +652,7 @@ void SVPWM_3ShuntCalcDutyCycles (Volt_Components Stat_Volt_Input)
                 {
                   hDeltaDuty = (u16)(hTimePhA - hTimePhB);
                   
-				  // Definition of crossing point
+			        	  // Definition of crossing point
                   if (hDeltaDuty > (u16)(PWM_PERIOD-hTimePhA)*2) 
                   {
                       hTimePhD = hTimePhA - TW_BEFORE; // Ts before Phase A 
@@ -683,8 +683,8 @@ void SVPWM_3ShuntCalcDutyCycles (Volt_Components Stat_Volt_Input)
                 break;
     case SECTOR_2:
                 hTimePhA = (T/8) + ((((T + wY) - wZ)/2)/131072);
-				hTimePhB = hTimePhA + wZ/131072;
-				hTimePhC = hTimePhA - wY/131072;
+			        	hTimePhB = hTimePhA + wZ/131072;
+			        	hTimePhC = hTimePhA - wY/131072;
                 
                 // ADC Syncronization setting value
                 if ((u16)(PWM_PERIOD-hTimePhB) > TW_AFTER)

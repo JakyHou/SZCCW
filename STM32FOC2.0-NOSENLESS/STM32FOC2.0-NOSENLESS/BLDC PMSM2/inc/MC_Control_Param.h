@@ -59,10 +59,10 @@
 #define NTC_THRESHOLD_C				60		//�C on heatsink of MB459 board
 #define NTC_HYSTERIS_C				5		// Temperature hysteresis (�C)
 
-#define OVERVOLTAGE_THRESHOLD_V		48		//Volt on DC Bus of MB459 board
-#define UNDERVOLTAGE_THRESHOLD_V	6		//Volt on DC Bus of MB459 board
+#define OVERVOLTAGE_THRESHOLD_V		22		//Volt on DC Bus of MB459 board
+#define UNDERVOLTAGE_THRESHOLD_V	2		//Volt on DC Bus of MB459 board
 
-#define BUS_ADC_CONV_RATIO			0.275//0.93	0.042	//DC bus voltage partitioning ratio
+#define BUS_ADC_CONV_RATIO			0.68//0.93	0.042	//DC bus voltage partitioning ratio
 
 /*********************** SPEED LOOP SAMPLING TIME *****************************/
 //Not to be modified

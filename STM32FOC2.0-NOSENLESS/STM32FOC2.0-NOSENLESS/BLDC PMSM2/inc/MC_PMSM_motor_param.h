@@ -26,7 +26,7 @@
 #define __MOTOR_PARAM_H
 
 // Number of motor pair of poles
-#define	POLE_PAIR_NUM  (u8) 4  //	(u8) 4        /* Number of motor pole pairs */
+#define	POLE_PAIR_NUM  (u8) 3  //	(u8) 4        /* Number of motor pole pairs */
 #define RS           1.5//1.5 //   2.10            /* Stator resistance , ohm*/
 #define LS           0.0006 //  0.0005// 0.0006        /* Stator inductance , H */
 
