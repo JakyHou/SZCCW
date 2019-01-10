@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/AN1160_PIC32MM0064GPL036_MCLV_MCHV.X.production.elf">                 
+  <executable name="dist/default/production/AN1160_PIC32MM0016GPL028_MCLV.X.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>17552</length>                 
-      <used>5984</used>                     
-      <free>11568</free>                     
+      <used>6008</used>                     
+      <free>11544</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
