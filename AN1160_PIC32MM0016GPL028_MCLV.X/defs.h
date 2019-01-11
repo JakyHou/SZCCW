@@ -46,7 +46,7 @@
 #define MCLV
 //#define MCHV
 
-#define FCY 24000000    //Internal 8MHz clock 2.4m
+#define FCY 24000000    //Internal 24MHz clock SPLLCONbits.PLLMULT = 1; //PLL X3 8M*3=24M
 #define FPWM 20000		//20,000 Hz PWM
 
 //##################### SPEED CONTROLLER. Choose only one of the two ############################
@@ -61,7 +61,7 @@
     #define STARTUP_DUTY            800     //sets the starting motor speed in forced commutation mode; increase the value for a lower speed
                                             //CCP1RBbits.CMPB_____L______---H--_____L_____--H---_______ L: 800 H:((FCY/FPWM)-1)-(CCP1RBbits.CMPB)
     #define STARTUP_RPM             1000	//final RPM after startup. this becomes the minimum RPM#define MIN_RPM 
-    #define MIN_RPM                 500 // 750     // motor RPM at MIN_MOTOR_SPEED_REF
+    #define MIN_RPM                 100 // 750     // motor RPM at MIN_MOTOR_SPEED_REF
     #define MAX_RPM                 3100    // motor RPM at MAX_MOTOR_SPEED_REF
     #define POLEPAIRS               3       // 5//  Number of pole pairs of the motor
 
@@ -72,7 +72,7 @@
     #define BEMF_STALL_LIMIT        2500     // If no BEMF signal is detected for (BEMF_STALL_LIMIT*BLANKING_COUNT * 50us => 5000*40*50/10e6=10s) then it is assumed the rotor is stalled
 
     #define MAX_MOTOR_SPEED_REF     1199    //1199    // corresponds to MAX_RPM
-    #define MIN_MOTOR_SPEED_REF     500     // decrease or increase this value to set the minimum motor speed
+    #define MIN_MOTOR_SPEED_REF     39//500     // decrease or increase this value to set the minimum motor speed
                                             // The minimum motor speed in closed loop is MAX_RPM*MIN_MOTOR_SPEED_REF/MAX_MOTOR_SPEED_REF
 
     #define RPM_PWM_FACTOR (uint16_t)(32768 * ((float)MAX_MOTOR_SPEED_REF / (float)MAX_RPM))	//PWM Duty cycle = RPM_PWM_FACTOR * Speed_in_RPM
