@@ -2,3 +2,4 @@
 *.properties
 *.xml
 *.xml*
+*.o

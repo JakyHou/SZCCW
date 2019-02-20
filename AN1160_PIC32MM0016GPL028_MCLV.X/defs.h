@@ -61,29 +61,29 @@
     #define STARTUP_DUTY            800     //sets the starting motor speed in forced commutation mode; increase the value for a lower speed
                                             //CCP1RBbits.CMPB_____L______---H--_____L_____--H---_______ L: 800 H:((FCY/FPWM)-1)-(CCP1RBbits.CMPB)
     #define STARTUP_RPM             1000	//final RPM after startup. this becomes the minimum RPM#define MIN_RPM 
-    #define MIN_RPM                 100 // 750     // motor RPM at MIN_MOTOR_SPEED_REF
+    #define MIN_RPM                 1000 // 750     // motor RPM at MIN_MOTOR_SPEED_REF
     #define MAX_RPM                 3100    // motor RPM at MAX_MOTOR_SPEED_REF
-    #define POLEPAIRS               3       // 5//  Number of pole pairs of the motor
+    #define POLEPAIRS               3// 5//  Number of pole pairs of the motor
 
-    #define RAMPDELAY_START         40      //in ms; the starting sector comutation period
+    #define RAMPDELAY_START         80      //in ms; the starting sector comutation period
     #define RAMPDELAY_MIN           4       //in ms; minimum period for startup ramp; when reaching this value, it will start looking for BEMF
 
     #define BLANKING_COUNT          40       // Blanking count expressed in PWM periods used to avoid false zero-crossing detection after commutating motor
-    #define BEMF_STALL_LIMIT        2500     // If no BEMF signal is detected for (BEMF_STALL_LIMIT*BLANKING_COUNT * 50us => 5000*40*50/10e6=10s) then it is assumed the rotor is stalled
+    #define BEMF_STALL_LIMIT        5000     // If no BEMF signal is detected for (BEMF_STALL_LIMIT*BLANKING_COUNT * 50us => 5000*40*50/10e6=10s) then it is assumed the rotor is stalled
 
-    #define MAX_MOTOR_SPEED_REF     1199    //1199    // corresponds to MAX_RPM
-    #define MIN_MOTOR_SPEED_REF     39//500     // decrease or increase this value to set the minimum motor speed
+    #define MAX_MOTOR_SPEED_REF     2000    //1199    // corresponds to MAX_RPM
+    #define MIN_MOTOR_SPEED_REF     700//500     // decrease or increase this value to set the minimum motor speed
                                             // The minimum motor speed in closed loop is MAX_RPM*MIN_MOTOR_SPEED_REF/MAX_MOTOR_SPEED_REF
 
     #define RPM_PWM_FACTOR (uint16_t)(32768 * ((float)MAX_MOTOR_SPEED_REF / (float)MAX_RPM))	//PWM Duty cycle = RPM_PWM_FACTOR * Speed_in_RPM
 
-    #define BEMF_VDDMAX             541     //465
+    #define BEMF_VDDMAX             520     //465
     /*	on MCLV:
         R10/(R10+R14) * DC Voltage / 3.3 V * 1024
         2K/32K * 24 / 3.3 * 1024 = 465 
      * 
      * now we use 12DC so
-     * 5.1k/(33+5.1)k * 12v / 3.3v * 1024 = 541
+     * 7.5k/(47+7.5)k * 12v / 3.3v * 1024 = 512
     */
 #elif defined MCHV      //MCHV - High Voltage PMSM Motor (Beijing Eletechnic 80-252140-220)
     #define STARTUP_DUTY            700     //sets the starting motor speed in forced commutation mode; increase the value for a lower speed
